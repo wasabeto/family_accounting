@@ -51,9 +51,63 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    #Profiles
+    - assets/images/avatar-1.jpg
+    - assets/images/avatar-place.png
+
+    #Social
+    - assets/images/social/post-1.jpg
+    - assets/images/social/post-l1.jpg
+    - assets/images/social/profile-p1.jpg
+
+    #Icons
+    - assets/icons/albums-outline.png
+    - assets/icons/analytics-outline.png
+    - assets/icons/apps-outline.png
+    - assets/icons/browsers-outline.png
+    - assets/icons/code-outline.png
+    - assets/icons/copy-outline.png
+    - assets/icons/download-outline.png
+    - assets/icons/ellipsis-vertical-circle-outline.png
+    - assets/icons/ellipsis-vertical-outline.png
+    - assets/icons/file-tray-full-outline.png
+    - assets/icons/grid-outline.png
+    - assets/icons/hourglass-outline.png
+    - assets/icons/instagram-outline.png
+    - assets/icons/list-outline.png
+    - assets/icons/course-outline.png
+    - assets/icons/planet-outline.png
+    - assets/icons/reader-outline.png
+    - assets/icons/resize-outline.png
+    - assets/icons/rocket-outline.png
+    - assets/icons/search-outline.png
+    - assets/icons/shapes-outline.png
+    - assets/icons/stats-chart-outline.png
+    - assets/icons/tablet-landscape-outline.png
+    - assets/icons/ticket-outline.png
+    - assets/icons/toggle-outline.png
+    - assets/icons/trending-up-outline.png
+    - assets/icons/music-outline.png
+    - assets/icons/newspaper-outline.png
+    - assets/icons/shop-outline.png
+    - assets/icons/hotel-outline.png
+    - assets/icons/auth-outline.png
+    - assets/icons/profile-outline.png
+    - assets/icons/setting-outline.png
+    - assets/icons/dashboard-outline.png
+    - assets/icons/wallet-outline.png
+    - assets/icons/chat-outline.png
+    - assets/icons/email-outline.png
+    - assets/icons/location-outline.png
+    - assets/icons/food-outline.png
+    - assets/icons/quiz-outline.png
+    - assets/icons/school-outline.png
+    - assets/icons/health-outline.png
+    - assets/icons/worker.png
+
+    #Designs
+    - assets/design/pattern-1.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
