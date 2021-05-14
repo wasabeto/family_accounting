@@ -1,6 +1,7 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
 import 'package:family_accounting/screens/auth/ForgotPasswordScreen.dart';
 import 'package:family_accounting/screens/auth/RegisterScreen.dart';
+import 'package:family_accounting/screens/tabs/FamilyAccountingFullApp.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -186,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => null));
+                                      builder: (context) => FamilyAccountingFullApp()));
                             },
                             child: Text(
                               "Sign in",
