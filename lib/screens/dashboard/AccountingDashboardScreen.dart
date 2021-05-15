@@ -1,4 +1,5 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
+import 'package:family_accounting/screens/profile/ProfileScreen.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,14 +79,19 @@ class _AccountingDashboardScreenState extends State<AccountingDashboardScreen> {
                             )
                           ],
                         ),
-                        Container(
-                          margin: Spacing.left(16),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
-                            child: Image(
-                              image: AssetImage('./assets/images/avatar-1.jpg'),
-                              width: MySize.size36,
-                              height: MySize.size36,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                          },
+                          child: Container(
+                            margin: Spacing.left(16),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
+                              child: Image(
+                                image: AssetImage('./assets/images/avatar-1.jpg'),
+                                width: MySize.size36,
+                                height: MySize.size36,
+                              ),
                             ),
                           ),
                         )
