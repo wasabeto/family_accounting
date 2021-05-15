@@ -49,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: themeData.colorScheme.onBackground,
                                 fontWeight: 500),
                             decoration: InputDecoration(
-                              hintText: "Username",
+                              hintText: "Full name",
                               hintStyle: AppTheme.getTextStyle(
                                   themeData.textTheme.bodyText1,
                                   letterSpacing: 0.1,

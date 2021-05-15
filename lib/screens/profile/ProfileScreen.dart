@@ -56,6 +56,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       margin: EdgeInsets.only(right: MySize.size16),
                       child: PopupMenuButton(
+                        icon: Icon(
+                          Icons.more_horiz,
+                          color: themeData.colorScheme.onBackground,
+                        ),
                         onSelected: (value) {
                           switch(value) {
                             case 'select_theme': {
@@ -243,49 +247,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           controller:
                               TextEditingController(text: "nat@gmail.com"),
                           textCapitalization: TextCapitalization.sentences,
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: MySize.size16),
-                        child: TextFormField(
-                          style: AppTheme.getTextStyle(
-                              themeData.textTheme.bodyText1,
-                              letterSpacing: 0.1,
-                              color: themeData.colorScheme.onBackground,
-                              fontWeight: 500),
-                          decoration: InputDecoration(
-                            hintText: "Phone",
-                            hintStyle: AppTheme.getTextStyle(
-                                themeData.textTheme.subtitle2,
-                                letterSpacing: 0.1,
-                                color: themeData.colorScheme.onBackground,
-                                fontWeight: 500),
-                            border:  OutlineInputBorder(
-                                borderRadius:  BorderRadius.all(
-                                   Radius.circular(8.0),
-                                ),
-                                borderSide: BorderSide.none),
-                            enabledBorder:  OutlineInputBorder(
-                                borderRadius:  BorderRadius.all(
-                                   Radius.circular(8.0),
-                                ),
-                                borderSide: BorderSide.none),
-                            focusedBorder:  OutlineInputBorder(
-                                borderRadius:  BorderRadius.all(
-                                   Radius.circular(8.0),
-                                ),
-                                borderSide: BorderSide.none),
-                            filled: true,
-                            fillColor: themeData.colorScheme.background,
-                            prefixIcon: Icon(
-                              MdiIcons.phoneOutline,
-                            ),
-                            contentPadding: EdgeInsets.all(0),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          textCapitalization: TextCapitalization.sentences,
-                          controller:
-                              TextEditingController(text: "091-987456321"),
                         ),
                       ),
                       Container(
