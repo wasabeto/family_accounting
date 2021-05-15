@@ -1,4 +1,6 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
+import 'package:family_accounting/screens/SelectThemeDialog.dart';
+import 'package:family_accounting/screens/auth/LoginScreen.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -11,9 +13,22 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
+class TextIconItem {
+  String key;
+  String text;
+  IconData iconData;
+
+  TextIconItem(this.key, this.text, this.iconData);
+}
+
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _passwordVisible = false;
   ThemeData themeData;
+
+  List<TextIconItem> _textIconChoice = [
+    TextIconItem("select_theme", "Select theme", Icons.image_rounded),
+    TextIconItem("logout", "Logout", Icons.logout),
+  ];
 
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
@@ -25,15 +40,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
             home: Scaffold(
                 body: ListView(
               children: <Widget>[
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(
-                      MdiIcons.chevronLeft,
-                      color: themeData.colorScheme.onBackground,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(
+                          MdiIcons.chevronLeft,
+                          color: themeData.colorScheme.onBackground,
+                        ),
+                      ),
                     ),
-                  ),
+                    Container(
+                      margin: EdgeInsets.only(right: MySize.size16),
+                      child: PopupMenuButton(
+                        onSelected: (value) {
+                          switch(value) {
+                            case 'select_theme': {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => SelectThemeDialog());
+                              break;
+                            }
+                            case 'logout': {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          LoginScreen()));
+                              break;
+                            }
+                          }
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return _textIconChoice
+                              .map((TextIconItem choice) {
+                            return PopupMenuItem(
+                              textStyle: TextStyle(color: themeData.colorScheme.onBackground),
+                              value: choice.key,
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(choice.iconData,
+                                      size: 18,
+                                      color: themeData.popupMenuTheme
+                                          .textStyle.color),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: MySize.size8),
+                                    child: Text(choice.text),
+                                  )
+                                ],
+                              ),
+                            );
+                          }).toList();
+                        },
+                        color: themeData.backgroundColor,
+                      ),
+                    )
+                  ],
                 ),
                 Container(
                   margin: EdgeInsets.only(top: MySize.size24),
