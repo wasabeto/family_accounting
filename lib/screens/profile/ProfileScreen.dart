@@ -5,6 +5,7 @@ import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../AppTheme.dart';
 
@@ -24,6 +25,13 @@ class TextIconItem {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _passwordVisible = false;
   ThemeData themeData;
+  Map<String, String> _userDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserDetails();
+  }
 
   List<TextIconItem> _textIconChoice = [
     TextIconItem("select_theme", "Select theme", Icons.image_rounded),
@@ -147,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )
                         ],
                       ),
-                      Text("Marcelina Willis",
+                      Text(_userDetails['userName'],
                           style: AppTheme.getTextStyle(
                               themeData.textTheme.headline6,
                               fontWeight:600,
@@ -202,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             contentPadding: EdgeInsets.all(0),
                           ),
                           controller:
-                              TextEditingController(text: "Marcelina Willis"),
+                              TextEditingController(text: _userDetails['userName']),
                           textCapitalization: TextCapitalization.sentences,
                         ),
                       ),
@@ -245,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           keyboardType: TextInputType.emailAddress,
                           controller:
-                              TextEditingController(text: "nat@gmail.com"),
+                              TextEditingController(text: _userDetails['userEmail']),
                           textCapitalization: TextCapitalization.sentences,
                         ),
                       ),
@@ -334,5 +342,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             )));
       },
     );
+  }
+
+  loadUserDetails() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    Map<String, String> userDetails = new Map<String, String>();
+    userDetails['userId'] = sharedPreferences.getString("userId");
+    userDetails['userName'] = sharedPreferences.getString("userName");
+    userDetails['userEmail'] = sharedPreferences.getString("userEmail");
+    setState(() {
+      _userDetails = userDetails;
+    });
   }
 }

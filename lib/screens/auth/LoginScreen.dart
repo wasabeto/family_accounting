@@ -7,6 +7,7 @@ import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../AppTheme.dart';
 
@@ -162,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 {'username': _emailController.value.text, 'password': _passwordController.value.text},
                                 {'method': 'POST', 'endPoint': '/auth/login'},
                               ).then((response) {
-                                print(response);
+                                storeLoginDetails(response);
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => FamilyAccountingFullApp()));
                               });
                             },
@@ -192,5 +193,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 )));
       },
     );
+  }
+
+  storeLoginDetails(loginResponse) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString("accessToken", loginResponse['accessToken']['token']);
+    sharedPreferences.setInt("expireIn", loginResponse['accessToken']['expireIn']);
+    sharedPreferences.setString("userId", loginResponse['user']['id']);
+    sharedPreferences.setString("userName", loginResponse['user']['fullName']);
+    sharedPreferences.setString("userEmail", loginResponse['user']['email']);
   }
 }
