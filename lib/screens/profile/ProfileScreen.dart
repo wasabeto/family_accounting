@@ -1,6 +1,9 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
+import 'package:family_accounting/ServiceLocator.dart';
+import 'package:family_accounting/models/UserModel.dart';
 import 'package:family_accounting/screens/SelectThemeDialog.dart';
 import 'package:family_accounting/screens/auth/LoginScreen.dart';
+import 'package:family_accounting/services/LocalStorageService.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -25,12 +28,15 @@ class TextIconItem {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _passwordVisible = false;
   ThemeData themeData;
-  Map<String, String> _userDetails;
+  User _userDetails;
 
   @override
   void initState() {
     super.initState();
-    loadUserDetails();
+    var storageService = locator.get<LocalStorageService>();
+    setState(() {
+      _userDetails = storageService.getUser();
+    });
   }
 
   List<TextIconItem> _textIconChoice = [
@@ -155,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           )
                         ],
                       ),
-                      Text(_userDetails['userName'],
+                      Text(_userDetails.fullName,
                           style: AppTheme.getTextStyle(
                               themeData.textTheme.headline6,
                               fontWeight:600,
@@ -210,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             contentPadding: EdgeInsets.all(0),
                           ),
                           controller:
-                              TextEditingController(text: _userDetails['userName']),
+                              TextEditingController(text: _userDetails.fullName),
                           textCapitalization: TextCapitalization.sentences,
                         ),
                       ),
@@ -253,7 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           keyboardType: TextInputType.emailAddress,
                           controller:
-                              TextEditingController(text: _userDetails['userEmail']),
+                              TextEditingController(text: _userDetails.email),
                           textCapitalization: TextCapitalization.sentences,
                         ),
                       ),
@@ -342,16 +348,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
             )));
       },
     );
-  }
-
-  loadUserDetails() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Map<String, String> userDetails = new Map<String, String>();
-    userDetails['userId'] = sharedPreferences.getString("userId");
-    userDetails['userName'] = sharedPreferences.getString("userName");
-    userDetails['userEmail'] = sharedPreferences.getString("userEmail");
-    setState(() {
-      _userDetails = userDetails;
-    });
   }
 }

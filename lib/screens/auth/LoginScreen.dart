@@ -1,8 +1,11 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
+import 'package:family_accounting/ServiceLocator.dart';
+import 'package:family_accounting/models/UserModel.dart';
 import 'package:family_accounting/screens/auth/ForgotPasswordScreen.dart';
 import 'package:family_accounting/screens/auth/RegisterScreen.dart';
 import 'package:family_accounting/screens/tabs/FamilyAccountingFullApp.dart';
 import 'package:family_accounting/providers/APIProvider.dart';
+import 'package:family_accounting/services/LocalStorageService.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -163,7 +166,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 {'username': _emailController.value.text, 'password': _passwordController.value.text},
                                 {'method': 'POST', 'endPoint': '/auth/login'},
                               ).then((response) {
-                                storeLoginDetails(response);
+                                var storageService = locator.get<LocalStorageService>();
+                                storageService.setUser(new User(
+                                  id: response['user']['id'],
+                                  email: response['user']['email'],
+                                  fullName: response['user']['fullName'],
+                                ));
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => FamilyAccountingFullApp()));
                               });
                             },

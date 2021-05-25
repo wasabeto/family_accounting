@@ -1,11 +1,15 @@
 import 'package:family_accounting/AppTheme.dart';
 import 'package:family_accounting/AppThemeNotifier.dart';
+import 'package:family_accounting/ServiceLocator.dart';
 import 'package:family_accounting/screens/auth/LoginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  // Initialize Service locator
+  setupLocator();
+
   //You will need to initialize AppThemeNotifier class for theme changes.
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {

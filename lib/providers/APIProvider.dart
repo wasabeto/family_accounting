@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:family_accounting/providers/APIExceptions.dart';
 import 'package:http/http.dart' as http;
 
 class APIProvider {
@@ -47,22 +48,29 @@ class APIProvider {
       }
 
       if (response != null) {
-        return json.decode(response.body);
+        final statusCode = response.statusCode;
+        if (statusCode >= 200 && statusCode < 299) {
+          if (response.body.isEmpty) {
+            return List<dynamic>();
+          } else {
+            return jsonDecode(response.body);
+          }
+        } else if (statusCode >= 400 && statusCode < 500) {
+          throw ClientErrorException();
+        } else if (statusCode >= 500 && statusCode < 600) {
+          throw ServerErrorException();
+        } else {
+          throw UnknownException();
+        }
       }
-      // else {
-      //   Response resp = new Response();
-      //   resp.respMsg = LocalConstants.genericError;
-      //   resp.respCode = LocalConstants.resp_failure;
-      //   Response.
-      // }
     } on TimeoutException catch (e) {
       //handleTimeout();
     } on SocketException catch (e) {
-      print('Socket Error: $e');
+      throw ConnectionException();
       //handleTimeout();
     } on Error catch (e) {
       print('General Error: $e');
-      //showError();
+      throw UnknownException();
     }
   }
 }
