@@ -2,6 +2,7 @@ import 'package:family_accounting/AppThemeNotifier.dart';
 import 'package:family_accounting/screens/auth/ForgotPasswordScreen.dart';
 import 'package:family_accounting/screens/auth/RegisterScreen.dart';
 import 'package:family_accounting/screens/tabs/FamilyAccountingFullApp.dart';
+import 'package:family_accounting/providers/APIProvider.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -17,6 +18,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   ThemeData themeData;
   bool _passwordVisible = false;
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+  final APIProvider _apiProvider = APIProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -39,27 +43,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Center(
                             child: Text(
                               "Welcome!",
-                              style: AppTheme.getTextStyle(
-                                  themeData.textTheme.headline6,
-                                  fontWeight: 600),
+                              style: AppTheme.getTextStyle(themeData.textTheme.headline6, fontWeight: 600),
                             ),
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(top: MySize.size24),
                           child: TextFormField(
-                            style: AppTheme.getTextStyle(
-                                themeData.textTheme.bodyText1,
-                                letterSpacing: 0.1,
-                                color: themeData.colorScheme.onBackground,
-                                fontWeight: 500),
+                            controller: _emailController,
+                            style: AppTheme.getTextStyle(themeData.textTheme.bodyText1, letterSpacing: 0.1, color: themeData.colorScheme.onBackground, fontWeight: 500),
                             decoration: InputDecoration(
                               hintText: "Email address",
-                              hintStyle: AppTheme.getTextStyle(
-                                  themeData.textTheme.subtitle2,
-                                  letterSpacing: 0.1,
-                                  color: themeData.colorScheme.onBackground,
-                                  fontWeight: 500),
+                              hintStyle: AppTheme.getTextStyle(themeData.textTheme.subtitle2, letterSpacing: 0.1, color: themeData.colorScheme.onBackground, fontWeight: 500),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(8.0),
@@ -85,25 +80,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               contentPadding: EdgeInsets.all(0),
                             ),
                             keyboardType: TextInputType.emailAddress,
-                            textCapitalization: TextCapitalization.sentences,
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(top: MySize.size16),
                           child: TextFormField(
+                            controller: _passwordController,
                             autofocus: false,
                             obscureText: _passwordVisible,
-                            style: AppTheme.getTextStyle(
-                                themeData.textTheme.bodyText1,
-                                letterSpacing: 0.1,
-                                color: themeData.colorScheme.onBackground,
-                                fontWeight: 500),
+                            style: AppTheme.getTextStyle(themeData.textTheme.bodyText1, letterSpacing: 0.1, color: themeData.colorScheme.onBackground, fontWeight: 500),
                             decoration: InputDecoration(
-                              hintStyle: AppTheme.getTextStyle(
-                                  themeData.textTheme.subtitle2,
-                                  letterSpacing: 0.1,
-                                  color: themeData.colorScheme.onBackground,
-                                  fontWeight: 500),
+                              hintStyle: AppTheme.getTextStyle(themeData.textTheme.subtitle2, letterSpacing: 0.1, color: themeData.colorScheme.onBackground, fontWeight: 500),
                               hintText: "Password",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
@@ -133,16 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   });
                                 },
                                 child: Icon(
-                                  _passwordVisible
-                                      ? MdiIcons.eyeOutline
-                                      : MdiIcons.eyeOffOutline,
+                                  _passwordVisible ? MdiIcons.eyeOutline : MdiIcons.eyeOffOutline,
                                   size: MySize.size22,
                                 ),
                               ),
                               isDense: true,
                               contentPadding: EdgeInsets.all(0),
                             ),
-                            textCapitalization: TextCapitalization.sentences,
                           ),
                         ),
                         Container(
@@ -150,17 +134,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ForgotPasswordScreen()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
                             },
                             child: Text(
                               "Forgot Password ?",
-                              style: AppTheme.getTextStyle(
-                                  themeData.textTheme.bodyText2,
-                                  fontWeight: 500),
+                              style: AppTheme.getTextStyle(themeData.textTheme.bodyText2, fontWeight: 500),
                             ),
                           ),
                         ),
@@ -172,30 +150,25 @@ class _LoginScreenState extends State<LoginScreen> {
                               BoxShadow(
                                 color: themeData.primaryColor.withAlpha(24),
                                 blurRadius: 5,
-                                offset:
-                                Offset(0, 3), // changes position of shadow
+                                offset: Offset(0, 3), // changes position of shadow
                               ),
                             ],
                           ),
                           margin: EdgeInsets.only(top: MySize.size24),
                           child: ElevatedButton(
-
-                            style: ButtonStyle(
-                                padding: MaterialStateProperty.all(Spacing.xy(16, 0))
-                            ),
+                            style: ButtonStyle(padding: MaterialStateProperty.all(Spacing.xy(16, 0))),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FamilyAccountingFullApp()));
+                              _apiProvider.sendRequest(
+                                {'username': _emailController.value.text, 'password': _passwordController.value.text},
+                                {'method': 'POST', 'endPoint': '/auth/login'},
+                              ).then((response) {
+                                print(response);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => FamilyAccountingFullApp()));
+                              });
                             },
                             child: Text(
                               "Sign in",
-                              style: AppTheme.getTextStyle(
-                                  themeData.textTheme.bodyText2,
-                                  fontWeight: 600)
-                                  .merge(TextStyle(
-                                  color: themeData.colorScheme.onPrimary)),
+                              style: AppTheme.getTextStyle(themeData.textTheme.bodyText2, fontWeight: 600).merge(TextStyle(color: themeData.colorScheme.onPrimary)),
                             ),
                           ),
                         ),
@@ -204,17 +177,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Center(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            RegisterScreen()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
                               },
                               child: Text(
                                 "I haven't an account",
-                                style: AppTheme.getTextStyle(
-                                    themeData.textTheme.bodyText2,
-                                    decoration: TextDecoration.underline),
+                                style: AppTheme.getTextStyle(themeData.textTheme.bodyText2, decoration: TextDecoration.underline),
                               ),
                             ),
                           ),
