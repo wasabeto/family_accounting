@@ -51,7 +51,7 @@ class APIProvider {
         final statusCode = response.statusCode;
         if (statusCode >= 200 && statusCode < 299) {
           if (response.body.isEmpty) {
-            return List<dynamic>();
+            return [];
           } else {
             return jsonDecode(response.body);
           }
@@ -64,12 +64,14 @@ class APIProvider {
         }
       }
     } on TimeoutException catch (e) {
-      //handleTimeout();
+      print('Timeout error: $e');
+      print(e);
     } on SocketException catch (e) {
+      print('Connection error: $e');
       throw ConnectionException();
       //handleTimeout();
     } on Error catch (e) {
-      print('General Error: $e');
+      print('General error: $e');
       throw UnknownException();
     }
   }

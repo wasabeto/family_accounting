@@ -1,9 +1,9 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
-import 'package:family_accounting/screens/auth/LoginScreen.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+
 import '../../AppTheme.dart';
 
 class RegisterScreen extends StatefulWidget {
