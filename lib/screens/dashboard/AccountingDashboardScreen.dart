@@ -1,4 +1,3 @@
-
 import 'package:family_accounting/AppThemeNotifier.dart';
 import 'package:family_accounting/models/DashboardModel.dart';
 import 'package:family_accounting/providers/APIProvider.dart';
@@ -43,140 +42,157 @@ class _AccountingDashboardScreenState extends State<AccountingDashboardScreen> {
             home: Scaffold(
                 body: Container(
               color: customAppTheme.bgLayer1,
-              child: ListView(
-                padding: Spacing.top(48),
-                children: [
-                  Container(
-                    margin: Spacing.fromLTRB(24, 0, 24, 0),
-                    child: Row(
+              child: FutureBuilder(
+                future: dashboardFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final DashboardModel dashboardModel = snapshot.data;
+                    return ListView(
+                      padding: Spacing.top(48),
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        Container(
+                          margin: Spacing.fromLTRB(24, 0, 24, 0),
+                          child: Row(
                             children: [
-                              Text(
-                                today,
-                                style: AppTheme.getTextStyle(themeData.textTheme.bodyText2, fontWeight: 400, letterSpacing: 0, color: themeData.colorScheme.onBackground),
-                              ),
-                              Container(
-                                child: Text(
-                                  "Accounting",
-                                  style: AppTheme.getTextStyle(themeData.textTheme.headline5,
-                                      fontSize: 24, fontWeight: 700, letterSpacing: -0.3, color: themeData.colorScheme.onBackground),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      today,
+                                      style: AppTheme.getTextStyle(themeData.textTheme.bodyText2, fontWeight: 400, letterSpacing: 0, color: themeData.colorScheme.onBackground),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        "Accounting",
+                                        style: AppTheme.getTextStyle(themeData.textTheme.headline5,
+                                            fontSize: 24, fontWeight: 700, letterSpacing: -0.3, color: themeData.colorScheme.onBackground),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              Stack(
+                                children: [
+                                  Container(
+                                    padding: Spacing.all(10),
+                                    decoration: BoxDecoration(
+                                        color: customAppTheme.bgLayer1,
+                                        borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
+                                        boxShadow: [BoxShadow(color: customAppTheme.shadowColor, blurRadius: MySize.size4)]),
+                                    child: Icon(
+                                      MdiIcons.bell,
+                                      size: MySize.size18,
+                                      color: themeData.colorScheme.onBackground.withAlpha(160),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 4,
+                                    top: 4,
+                                    child: Container(
+                                      width: MySize.size6,
+                                      height: MySize.size6,
+                                      decoration: BoxDecoration(color: customAppTheme.colorError, shape: BoxShape.circle),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                                },
+                                child: Container(
+                                  margin: Spacing.left(16),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
+                                    child: Image(
+                                      image: AssetImage('./assets/images/avatar-1.jpg'),
+                                      width: MySize.size36,
+                                      height: MySize.size36,
+                                    ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
-                        Stack(
-                          children: [
-                            Container(
-                              padding: Spacing.all(10),
-                              decoration: BoxDecoration(
-                                  color: customAppTheme.bgLayer1,
-                                  borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
-                                  boxShadow: [BoxShadow(color: customAppTheme.shadowColor, blurRadius: MySize.size4)]),
-                              child: Icon(
-                                MdiIcons.bell,
-                                size: MySize.size18,
-                                color: themeData.colorScheme.onBackground.withAlpha(160),
-                              ),
-                            ),
-                            Positioned(
-                              right: 4,
-                              top: 4,
-                              child: Container(
-                                width: MySize.size6,
-                                height: MySize.size6,
-                                decoration: BoxDecoration(color: customAppTheme.colorError, shape: BoxShape.circle),
-                              ),
-                            )
-                          ],
+                        _CarouselCardAccounting(accountingList: dashboardModel.accounting),
+                        Container(
+                          padding: EdgeInsets.only(left: MySize.size16, right: MySize.size16, top: MySize.size24),
+                          child: Text(
+                            "LAST TRANSACTION",
+                            style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, color: themeData.colorScheme.onBackground.withAlpha(220)),
+                          ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-                          },
-                          child: Container(
-                            margin: Spacing.left(16),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
-                              child: Image(
-                                image: AssetImage('./assets/images/avatar-1.jpg'),
-                                width: MySize.size36,
-                                height: MySize.size36,
-                              ),
+                        Container(
+                          margin: Spacing.top(8),
+                          padding: Spacing.vertical(8),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: Spacing.left(12),
+                                  child: singleCategory(title: "All", iconData: MdiIcons.ballotOutline, index: 0),
+                                ),
+                                singleCategory(title: "Birthday", iconData: MdiIcons.cakeVariant, index: 1),
+                                singleCategory(title: "Party", iconData: MdiIcons.partyPopper, index: 2),
+                                singleCategory(title: "Talks", iconData: MdiIcons.chatOutline, index: 3),
+                                Container(
+                                  margin: Spacing.right(24),
+                                  child: singleCategory(title: "Food", iconData: MdiIcons.food, index: 4),
+                                ),
+                              ],
                             ),
                           ),
-                        )
+                        ),
+                        Container(
+                            padding: EdgeInsets.only(left: MySize.size8, right: MySize.size8, top: MySize.size8),
+                            child: Column(
+                              children: <Widget>[
+                                _TransactionWidget(name: "Liana Fitzgeraldl", date: "29 may 2020", amount: 177, isSend: false),
+                                Divider(
+                                  height: 0,
+                                ),
+                                _TransactionWidget(name: "Natalia Dyer", date: "14 dec 2019", amount: 99, isSend: true),
+                                Divider(
+                                  height: 0,
+                                ),
+                                _TransactionWidget(name: "Talia", date: "6 June 2019", amount: 100, isSend: true),
+                                Divider(
+                                  height: 0,
+                                ),
+                                _TransactionWidget(name: "Shauna Mark", date: "29 dec 2019", amount: 160, isSend: true),
+                                Divider(
+                                  height: 0,
+                                ),
+                                _TransactionWidget(name: "Natalia Dyer", date: "2 dec 2019", amount: 19, isSend: true),
+                                Divider(
+                                  height: 0,
+                                ),
+                                _TransactionWidget(name: "Paul Rip", date: "4 dec 2019", amount: 62, isSend: true),
+                                Container(
+                                  padding: EdgeInsets.only(top: MySize.size12, bottom: MySize.size16),
+                                  child: SizedBox(
+                                      width: MySize.size20,
+                                      height: MySize.size20,
+                                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(themeData.colorScheme.primary), strokeWidth: 1.5)),
+                                )
+                              ],
+                            ))
                       ],
-                    ),
-                  ),
-                  _CardWidget(),
-                  Container(
-                    padding: EdgeInsets.only(left: MySize.size16, right: MySize.size16, top: MySize.size24),
-                    child: Text(
-                      "LAST TRANSACTION",
-                      style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, color: themeData.colorScheme.onBackground.withAlpha(220)),
-                    ),
-                  ),
-                  Container(
-                    margin: Spacing.top(8),
-                    padding: Spacing.vertical(8),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: Spacing.left(12),
-                            child: singleCategory(title: "All", iconData: MdiIcons.ballotOutline, index: 0),
-                          ),
-                          singleCategory(title: "Birthday", iconData: MdiIcons.cakeVariant, index: 1),
-                          singleCategory(title: "Party", iconData: MdiIcons.partyPopper, index: 2),
-                          singleCategory(title: "Talks", iconData: MdiIcons.chatOutline, index: 3),
-                          Container(
-                            margin: Spacing.right(24),
-                            child: singleCategory(title: "Food", iconData: MdiIcons.food, index: 4),
-                          ),
-                        ],
+                    );
+                  } else {
+                    return Container(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                          themeData.colorScheme.primary,
+                        )),
                       ),
-                    ),
-                  ),
-                  Container(
-                      padding: EdgeInsets.only(left: MySize.size8, right: MySize.size8, top: MySize.size8),
-                      child: Column(
-                        children: <Widget>[
-                          _TransactionWidget(name: "Liana Fitzgeraldl", date: "29 may 2020", amount: 177, isSend: false),
-                          Divider(
-                            height: 0,
-                          ),
-                          _TransactionWidget(name: "Natalia Dyer", date: "14 dec 2019", amount: 99, isSend: true),
-                          Divider(
-                            height: 0,
-                          ),
-                          _TransactionWidget(name: "Talia", date: "6 June 2019", amount: 100, isSend: true),
-                          Divider(
-                            height: 0,
-                          ),
-                          _TransactionWidget(name: "Shauna Mark", date: "29 dec 2019", amount: 160, isSend: true),
-                          Divider(
-                            height: 0,
-                          ),
-                          _TransactionWidget(name: "Natalia Dyer", date: "2 dec 2019", amount: 19, isSend: true),
-                          Divider(
-                            height: 0,
-                          ),
-                          _TransactionWidget(name: "Paul Rip", date: "4 dec 2019", amount: 62, isSend: true),
-                          Container(
-                            padding: EdgeInsets.only(top: MySize.size12, bottom: MySize.size16),
-                            child: SizedBox(
-                                width: MySize.size20,
-                                height: MySize.size20,
-                                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(themeData.colorScheme.primary), strokeWidth: 1.5)),
-                          )
-                        ],
-                      ))
-                ],
+                    );
+                  }
+                },
               ),
             )));
       },
@@ -228,168 +244,90 @@ class _AccountingDashboardScreenState extends State<AccountingDashboardScreen> {
   }
 }
 
-class _CardWidget extends StatelessWidget {
+class _CarouselCardAccounting extends StatefulWidget {
+  final List<AccountingModel> accountingList;
+
+  _CarouselCardAccounting({Key key, @required this.accountingList}) : super(key: key);
+
+  @override
+  _CarouselCardAccountingState createState() => _CarouselCardAccountingState();
+}
+
+class _CarouselCardAccountingState extends State<_CarouselCardAccounting> {
+  ThemeData themeData;
+
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
-
+    themeData = Theme.of(context);
     return Container(
       height: MediaQuery.of(context).size.height * 0.28,
-      child: PageView(
+      child: PageView.builder(
         physics: ClampingScrollPhysics(),
-        controller: PageController(initialPage: 1, viewportFraction: 0.9),
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: MySize.size8, bottom: MySize.size24, right: MySize.size8),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.7, color: themeData.colorScheme.surface),
-              color: Color(0xff8d95ac),
-              borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
-              boxShadow: [
-                BoxShadow(
-                  color: themeData.cardTheme.shadowColor.withAlpha(28),
-                  blurRadius: 3,
-                  offset: Offset(0, 1), // changes position of shadow
-                ),
-              ],
-            ),
-            padding: EdgeInsets.only(left: MySize.size24, right: MySize.size24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text("Apr", style: AppTheme.getTextStyle(themeData.textTheme.headline5, fontWeight: 700, color: Colors.black)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("INCOMES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: Colors.black)),
-                    Text("\$ 12,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("EXPENSES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: Colors.black)),
-                    Text("\$ 7,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
-                  ],
-                ),
-                Container(
-                  margin: Spacing.top(8),
-                  child: Row(
-                    children: <Widget>[
-                      Generator.buildProgress(
-                          progress: 68.0,
-                          activeColor: themeData.colorScheme.primary,
-                          inactiveColor: themeData.colorScheme.onPrimary,
-                          width: MediaQuery.of(context).size.width * 0.5),
-                      Container(
-                        margin: Spacing.left(16),
-                        child: Text(
-                          "68%",
-                          style: AppTheme.getTextStyle(themeData.textTheme.caption, color: themeData.colorScheme.primary, muted: true, fontWeight: 600, letterSpacing: 0.5),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: MySize.size8, bottom: MySize.size24, right: MySize.size8),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.7, color: themeData.colorScheme.surface),
-              color: themeData.colorScheme.background,
-              borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
-              boxShadow: [
-                BoxShadow(
-                  color: themeData.cardTheme.shadowColor.withAlpha(28),
-                  blurRadius: 3,
-                  offset: Offset(0, 1), // changes position of shadow
-                ),
-              ],
-            ),
-            padding: EdgeInsets.only(left: MySize.size24, right: MySize.size24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text("May", style: AppTheme.getTextStyle(themeData.textTheme.headline5, fontWeight: 700, color: themeData.colorScheme.onBackground)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("INCOMES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: themeData.colorScheme.onBackground)),
-                    Text("\$ 12,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: themeData.colorScheme.onBackground)),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("EXPENSES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: themeData.colorScheme.onBackground)),
-                    Text("\$ 7,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: themeData.colorScheme.onBackground)),
-                  ],
-                ),
-                Container(
-                  margin: Spacing.top(8),
-                  child: Row(
-                    children: <Widget>[
-                      Generator.buildProgress(
-                          progress: 68.0,
-                          activeColor: themeData.colorScheme.primary,
-                          inactiveColor: themeData.colorScheme.onPrimary,
-                          width: MediaQuery.of(context).size.width * 0.5),
-                      Container(
-                        margin: Spacing.left(16),
-                        child: Text(
-                          "68%",
-                          style: AppTheme.getTextStyle(themeData.textTheme.caption, color: themeData.colorScheme.primary, muted: true, fontWeight: 600, letterSpacing: 0.5),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: MySize.size8, bottom: MySize.size24, left: MySize.size8),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.7, color: themeData.colorScheme.surface),
-              color: themeData.colorScheme.primary,
-              borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
-              boxShadow: [
-                BoxShadow(
-                  color: themeData.cardTheme.shadowColor.withAlpha(28),
-                  blurRadius: 3,
-                  offset: Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      MdiIcons.plus,
-                      color: themeData.colorScheme.onPrimary,
-                    ),
-                    SizedBox(
-                      width: MySize.size8,
-                    ),
-                    Text("Add card".toUpperCase(),
-                        style: AppTheme.getTextStyle(themeData.textTheme.subtitle1, letterSpacing: 0.8, fontWeight: 700, color: themeData.colorScheme.onPrimary)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+        controller: PageController(initialPage: widget.accountingList.length - 1, viewportFraction: 0.9),
+        itemCount: widget.accountingList.length,
+        itemBuilder: (context, position) {
+          return renderCard(widget.accountingList[position]);
+        },
         onPageChanged: (page) {
           print(page);
         },
+      ),
+    );
+  }
+
+  Widget renderCard(AccountingModel acc) {
+    final month = DateFormat("MMM").format(DateTime.parse(acc.startDate));
+    return Container(
+      margin: EdgeInsets.only(top: MySize.size8, bottom: MySize.size24, right: MySize.size8),
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.7, color: themeData.colorScheme.surface),
+        color: Color(0xff8d95ac),
+        borderRadius: BorderRadius.all(Radius.circular(MySize.size8)),
+        boxShadow: [
+          BoxShadow(
+            color: themeData.cardTheme.shadowColor.withAlpha(28),
+            blurRadius: 3,
+            offset: Offset(0, 1), // changes position of shadow
+          ),
+        ],
+      ),
+      padding: EdgeInsets.only(left: MySize.size24, right: MySize.size24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text(month, style: AppTheme.getTextStyle(themeData.textTheme.headline5, fontWeight: 700, color: Colors.black)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("INCOMES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: Colors.black)),
+              Text("\$ 12,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("EXPENSES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: Colors.black)),
+              Text("\$ 7,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
+            ],
+          ),
+          Container(
+            margin: Spacing.top(8),
+            child: Row(
+              children: <Widget>[
+                Generator.buildProgress(
+                    progress: 68.0, activeColor: themeData.colorScheme.primary, inactiveColor: themeData.colorScheme.onPrimary, width: MediaQuery.of(context).size.width * 0.5),
+                Container(
+                  margin: Spacing.left(16),
+                  child: Text(
+                    "68%",
+                    style: AppTheme.getTextStyle(themeData.textTheme.caption, color: themeData.colorScheme.primary, muted: true, fontWeight: 600, letterSpacing: 0.5),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
