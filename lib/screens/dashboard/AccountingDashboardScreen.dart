@@ -1,4 +1,5 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
+import 'package:family_accounting/models/AccountingModel.dart';
 import 'package:family_accounting/models/DashboardModel.dart';
 import 'package:family_accounting/providers/APIProvider.dart';
 import 'package:family_accounting/screens/profile/ProfileScreen.dart';
@@ -301,14 +302,16 @@ class _CarouselCardAccountingState extends State<_CarouselCardAccounting> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text("INCOMES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: Colors.black)),
-              Text("\$ 12,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
+              Text(acc.getTotalIncomesAmount().toStringAsFixed(2),
+                  style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text("EXPENSES", style: AppTheme.getTextStyle(themeData.textTheme.overline, color: Colors.black)),
-              Text("\$ 7,000", style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
+              Text(acc.getTotalExpensesAmount().toStringAsFixed(2),
+                  style: AppTheme.getTextStyle(themeData.textTheme.caption, fontWeight: 700, letterSpacing: 0.3, color: Colors.black)),
             ],
           ),
           Container(
@@ -316,11 +319,11 @@ class _CarouselCardAccountingState extends State<_CarouselCardAccounting> {
             child: Row(
               children: <Widget>[
                 Generator.buildProgress(
-                    progress: 68.0, activeColor: themeData.colorScheme.primary, inactiveColor: themeData.colorScheme.onPrimary, width: MediaQuery.of(context).size.width * 0.5),
+                    progress: acc.getBalance(), activeColor: themeData.colorScheme.primary, inactiveColor: themeData.colorScheme.onPrimary, width: MediaQuery.of(context).size.width * 0.5),
                 Container(
                   margin: Spacing.left(16),
                   child: Text(
-                    "68%",
+                    acc.getBalance().toString() + '%',
                     style: AppTheme.getTextStyle(themeData.textTheme.caption, color: themeData.colorScheme.primary, muted: true, fontWeight: 600, letterSpacing: 0.5),
                   ),
                 )
