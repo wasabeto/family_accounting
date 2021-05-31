@@ -1,10 +1,10 @@
 import 'package:family_accounting/AppThemeNotifier.dart';
 import 'package:family_accounting/ServiceLocator.dart';
 import 'package:family_accounting/models/UserModel.dart';
+import 'package:family_accounting/providers/APIProvider.dart';
 import 'package:family_accounting/screens/auth/ForgotPasswordScreen.dart';
 import 'package:family_accounting/screens/auth/RegisterScreen.dart';
 import 'package:family_accounting/screens/tabs/FamilyAccountingFullApp.dart';
-import 'package:family_accounting/providers/APIProvider.dart';
 import 'package:family_accounting/services/LocalStorageService.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
 import 'package:flutter/material.dart';
@@ -171,6 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   id: response['user']['id'],
                                   email: response['user']['email'],
                                   fullName: response['user']['fullName'],
+                                  accessToken: new AccessTokenModel.fromJson(response['accessToken'])
                                 ));
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => FamilyAccountingFullApp()));
                               });

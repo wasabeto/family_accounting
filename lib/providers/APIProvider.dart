@@ -2,16 +2,23 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:family_accounting/ServiceLocator.dart';
 import 'package:family_accounting/providers/APIExceptions.dart';
+import 'package:family_accounting/services/LocalStorageService.dart';
 import 'package:http/http.dart' as http;
 
 class APIProvider {
   static String _baseURL = 'http://localhost:3000';
+  var storageService = locator.get<LocalStorageService>();
 
   Future<dynamic> sendRequest(dynamic body, Map<String, dynamic> options) async {
     http.Response response;
     final Map<String, String> headers = new Map<String, String>();
     headers.putIfAbsent(HttpHeaders.contentTypeHeader, () => 'application/x-www-form-urlencoded');
+    var accessToken = storageService.getUser().accessToken;
+    if (accessToken.token != '') {
+      headers.putIfAbsent(HttpHeaders.authorizationHeader, () => 'Bearer ' + accessToken.token);
+    }
 
     try {
       switch(options['method']) {

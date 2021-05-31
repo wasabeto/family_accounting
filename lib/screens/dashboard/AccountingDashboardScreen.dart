@@ -1,4 +1,7 @@
+
 import 'package:family_accounting/AppThemeNotifier.dart';
+import 'package:family_accounting/models/DashboardModel.dart';
+import 'package:family_accounting/providers/APIProvider.dart';
 import 'package:family_accounting/screens/profile/ProfileScreen.dart';
 import 'package:family_accounting/utils/Generator.dart';
 import 'package:family_accounting/utils/SizeConfig.dart';
@@ -16,10 +19,18 @@ class AccountingDashboardScreen extends StatefulWidget {
 }
 
 class _AccountingDashboardScreenState extends State<AccountingDashboardScreen> {
+  final APIProvider _apiProvider = APIProvider();
+  Future<DashboardModel> dashboardFuture;
   ThemeData themeData;
   CustomAppTheme customAppTheme;
   String today = DateFormat("E d MMM, yyyy").format(DateTime.now());
   int selectedCategory = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    dashboardFuture = loadDashboard();
+  }
 
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
@@ -210,6 +221,11 @@ class _AccountingDashboardScreenState extends State<AccountingDashboardScreen> {
           ),
         ));
   }
+
+  Future<DashboardModel> loadDashboard() async {
+    final response = await _apiProvider.sendRequest({}, {'method': 'GET', 'endPoint': '/dashboard?id=60a27a0f8b1e1d70ffbfef2e'});
+    return DashboardModel.fromJson(response);
+  }
 }
 
 class _CardWidget extends StatelessWidget {
@@ -371,6 +387,9 @@ class _CardWidget extends StatelessWidget {
             ),
           ),
         ],
+        onPageChanged: (page) {
+          print(page);
+        },
       ),
     );
   }
