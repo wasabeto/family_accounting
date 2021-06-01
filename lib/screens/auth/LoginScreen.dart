@@ -22,8 +22,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   ThemeData themeData;
   bool _passwordVisible = false;
-  TextEditingController _emailController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController(text: 'wasabeto@gmail.com');
+  TextEditingController _passwordController = new TextEditingController(text: 'wasabeto');
   final APIProvider _apiProvider = APIProvider();
 
   @override

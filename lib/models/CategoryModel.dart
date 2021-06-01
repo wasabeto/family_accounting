@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 class CategoryModel {
   String id;
   String name;
@@ -13,5 +16,14 @@ class CategoryModel {
     data['id'] = this.id;
     data['name'] = this.name;
     return data;
+  }
+
+  IconData getIcon() {
+    switch(this.name) {
+      case 'Salary': return MdiIcons.cashMultiple;
+      case 'Rent': return MdiIcons.homeModern;
+      case 'Food': return MdiIcons.food;
+      default: return MdiIcons.square;
+    }
   }
 }

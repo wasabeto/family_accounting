@@ -1,3 +1,4 @@
+import 'package:family_accounting/models/CategoryModel.dart';
 import 'package:family_accounting/models/IncomeExpenseModel.dart';
 
 class AccountingModel {
@@ -52,5 +53,24 @@ class AccountingModel {
     double totalIncomesAmount = getTotalIncomesAmount();
     double totalExpensesAmount = getTotalExpensesAmount();
     return (totalIncomesAmount > 0) ? (totalExpensesAmount * 100 / totalIncomesAmount).round().toDouble() : 0.0;
+  }
+
+  List<CategoryModel> getCategories() {
+    List<CategoryModel> categories = [];
+    this.incomeExpenses.toList().forEach((ie) {
+      if (categories.where((c) => c.id == ie.category.id).length == 0) {
+        categories.add(ie.category);
+      }
+    });
+    return categories;
+  }
+
+  List<IncomeExpenseModel> getIncomeExpenseByCategory(String categoryId) {
+    if (categoryId == 'all') {
+      return this.incomeExpenses.toList();
+    } else {
+      return this.incomeExpenses.where((ie) => ie.category.id == categoryId).toList();
+    }
+
   }
 }
